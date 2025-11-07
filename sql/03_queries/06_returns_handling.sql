@@ -1,44 +1,180 @@
--- 06_returns_handling.sql - REVISED for realistic distribution
--- Returns occur ~5% of orders (12% random + 88% pattern-based)
--- Uses customer ID hash for pseudo-random but reproducible patterns
+-- 06_returns_handling.sql - MATCHES PYTHON LOGIC EXACTLY
+-- Industry return rates by category + reverse logistics breakdown
+-- Disposition: 60% resale / 20% discounted / 20% scrap
 
 SELECT 
     T.TRANSACTIONID,
     T.CUSTOMERID,
+    T.PRODUCTID,
+    P.PRODUCTCATEGORY,
+    T.QUANTITY,
+    WH.ORDERWEIGHT_KG,
     T.TRANSACTIONAMOUNT,
-    -- 88% deterministic: Returns more likely if:
-    -- - Customer has high order frequency (returns correlate with volume)
-    -- - Order amount between 500-2000 (sweet spot for returns)
-    -- 12% random outliers
+    T.ISSTANDARDORDER,
+    T.ISURGENT,
+    
+    -- STEP 1: DETERMINE RETURN RATE BY CATEGORY (matching Python)
     CASE 
-        WHEN (ABS(HASH(T.CUSTOMERID)) % 100) < 12 THEN TRUE  -- 12% pure random
-        WHEN (ABS(HASH(T.CUSTOMERID)) % 100) >= 88 AND T.TRANSACTIONAMOUNT BETWEEN 500 AND 2000 THEN TRUE  -- 8% pattern
-        ELSE FALSE 
-    END AS HAS_RETURN,
+        WHEN P.PRODUCTCATEGORY = 'Fresh' THEN 0.12
+        WHEN P.PRODUCTCATEGORY = 'Milk' THEN 0.08
+        WHEN P.PRODUCTCATEGORY = 'Delicatessen' THEN 0.15
+        WHEN P.PRODUCTCATEGORY = 'Frozen' THEN 0.04
+        WHEN P.PRODUCTCATEGORY = 'Grocery' THEN 0.02
+        WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') THEN 0.01
+        ELSE 0.05
+    END AS RETURN_RATE,
+    
+    -- STEP 2: DETERMINE IF ORDER IS RETURNED (using category-specific rate)
+    CASE 
+        WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN TRUE
+        WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN TRUE
+        WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN TRUE
+        WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN TRUE
+        WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN TRUE
+        WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN TRUE
+        ELSE FALSE
+    END AS IS_RETURNED,
+    
+    -- STEP 3: REVERSE TRANSPORTATION COST
+    -- Standard orders: Customer pays (€0), Custom orders: We pay (€20 + €5 cold chain if perishable)
+    CASE 
+        WHEN T.ISSTANDARDORDER = TRUE THEN 0.00
+        WHEN T.ISSTANDARDORDER = FALSE AND P.PRODUCTCATEGORY IN ('Fresh', 'Milk', 'Delicatessen') THEN 25.00
+        WHEN T.ISSTANDARDORDER = FALSE THEN 20.00
+        ELSE 0.00
+    END AS REVERSE_SHIPPING_COST_EUR,
+    
+    -- STEP 4: HANDLING COSTS (only if returned)
+    CASE 
+        WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN 2.50
+        WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN 2.50
+        ELSE 0.00
+    END AS RECEIVING_COST_EUR,
     
     CASE 
-        WHEN (ABS(HASH(T.CUSTOMERID)) % 100) < 12 OR ((ABS(HASH(T.CUSTOMERID)) % 100) >= 88 AND T.TRANSACTIONAMOUNT BETWEEN 500 AND 2000) 
-            THEN ROUND(T.TRANSACTIONAMOUNT * 0.05, 2)
-        ELSE 0 
-    END AS RETURN_PROCESSING_COST,
+        WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN 2.50
+        WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN 2.50
+        WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN 2.50
+        ELSE 0.00
+    END AS QC_COST_EUR,
+    
+    -- STEP 5: RESTOCKING COST (half of order weight × €0.33/kg)
+    ROUND(
+        CASE 
+            WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+            WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+            WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+            WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+            WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+            WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+            ELSE 0.00
+        END,
+        2
+    ) AS RESTOCKING_COST_EUR,
+    
+    -- STEP 6: DISPOSITION ANALYSIS (60% resale / 20% discounted @ 40% loss / 20% scrap @ 100% loss)
+    ROUND(T.TRANSACTIONAMOUNT * 0.60, 2) AS RESELLABLE_VALUE_EUR,
+    ROUND(T.TRANSACTIONAMOUNT * 0.20, 2) AS DISCOUNTED_VALUE_EUR,
+    ROUND(T.TRANSACTIONAMOUNT * 0.20, 2) AS SCRAP_VALUE_EUR,
+    
+    -- STEP 7: VALUE LOSS (discount loss 40% + scrap loss 100%)
+    ROUND(
+        (T.TRANSACTIONAMOUNT * 0.20 * 0.40) +  -- 20% items discounted at 40% loss
+        (T.TRANSACTIONAMOUNT * 0.20 * 1.00),   -- 20% items scrapped at 100% loss
+        2
+    ) AS TOTAL_VALUE_LOSS_EUR,
+    
+    -- STEP 8: DISPOSAL COST (20% of order weight × €0.20/kg)
+    ROUND(
+        CASE 
+            WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+            WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+            WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+            WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+            WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+            WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+            ELSE 0.00
+        END,
+        2
+    ) AS DISPOSAL_COST_EUR,
+    
+    -- STEP 9: RETURN RESPONSIBILITY (assign randomly via HASH)
+    CASE 
+        WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 0 THEN 'OurError'
+        WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 1 THEN 'ShippingDamage'
+        WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 2 THEN 'CustomerComplaint'
+        ELSE 'QualityIssue'
+    END AS RETURN_REASON,
     
     CASE 
-        WHEN (ABS(HASH(T.CUSTOMERID)) % 100) < 12 OR ((ABS(HASH(T.CUSTOMERID)) % 100) >= 88 AND T.TRANSACTIONAMOUNT BETWEEN 500 AND 2000) 
-            THEN ROUND(T.TRANSACTIONAMOUNT * 0.08, 2)
-        ELSE 0 
-    END AS RETURN_SHIPPING_COST,
+        WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 0 THEN 1.0    -- OurError: we pay 100%
+        WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 1 THEN 0.5    -- ShippingDamage: split 50/50
+        WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 2 THEN 1.0    -- CustomerComplaint: we pay 100%
+        ELSE 1.0                                               -- QualityIssue: we pay 100%
+    END AS RESPONSIBILITY_PERCENTAGE,
     
-    CASE 
-        WHEN (ABS(HASH(T.CUSTOMERID)) % 100) < 12 OR ((ABS(HASH(T.CUSTOMERID)) % 100) >= 88 AND T.TRANSACTIONAMOUNT BETWEEN 500 AND 2000) 
-            THEN ROUND(T.TRANSACTIONAMOUNT * 0.02, 2)
-        ELSE 0 
-    END AS RESTOCKING_COST,
-    
-    CASE 
-        WHEN (ABS(HASH(T.CUSTOMERID)) % 100) < 12 OR ((ABS(HASH(T.CUSTOMERID)) % 100) >= 88 AND T.TRANSACTIONAMOUNT BETWEEN 500 AND 2000) 
-            THEN ROUND(T.TRANSACTIONAMOUNT * 0.15, 2)
-        ELSE 0 
-    END AS TOTAL_RETURN_COST
+    -- STEP 10: TOTAL RETURN EXPENSE = (Transport + Handling + Restocking + Disposal) * Responsibility + Value Loss
+    ROUND(
+        ((
+            CASE WHEN T.ISSTANDARDORDER = TRUE THEN 0.00
+                 WHEN T.ISSTANDARDORDER = FALSE AND P.PRODUCTCATEGORY IN ('Fresh', 'Milk', 'Delicatessen') THEN 25.00
+                 WHEN T.ISSTANDARDORDER = FALSE THEN 20.00
+                 ELSE 0.00
+            END +
+            CASE 
+                WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN 2.50
+                WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN 2.50
+                ELSE 0.00
+            END +
+            CASE 
+                WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN 2.50
+                WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN 2.50
+                WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN 2.50
+                ELSE 0.00
+            END +
+            CASE 
+                WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+                WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+                WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+                WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+                WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+                WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN (WH.ORDERWEIGHT_KG / 2) * 0.33
+                ELSE 0.00
+            END +
+            CASE 
+                WHEN P.PRODUCTCATEGORY = 'Fresh' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 12 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+                WHEN P.PRODUCTCATEGORY = 'Milk' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 8 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+                WHEN P.PRODUCTCATEGORY = 'Delicatessen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 15 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+                WHEN P.PRODUCTCATEGORY = 'Frozen' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 4 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+                WHEN P.PRODUCTCATEGORY = 'Grocery' AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 2 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+                WHEN P.PRODUCTCATEGORY IN ('DetergentsPaper', 'Detergents/Paper') AND (ABS(HASH(T.TRANSACTIONID)) % 100) < 1 THEN (WH.ORDERWEIGHT_KG * 0.20) * 0.20
+                ELSE 0.00
+            END
+        ) * CASE 
+                WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 0 THEN 1.0
+                WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 1 THEN 0.5
+                WHEN (ABS(HASH(T.TRANSACTIONID)) % 4) = 2 THEN 1.0
+                ELSE 1.0
+            END) +
+        ((T.TRANSACTIONAMOUNT * 0.20 * 0.40) + (T.TRANSACTIONAMOUNT * 0.20 * 1.00)),
+        2
+    ) AS TOTAL_RETURN_EXPENSE_EUR
     
 FROM B2B_PROFITABILITY.PUBLIC.TRANSACTIONS_GENERATED T
+LEFT JOIN B2B_PROFITABILITY.PUBLIC.PRODUCTS_GENERATED P ON T.PRODUCTID = P.PRODUCTID
+LEFT JOIN B2B_PROFITABILITY.PUBLIC.04_WAREHOUSE_COSTS_GENERATED WH ON T.TRANSACTIONID = WH.TRANSACTIONID
 ORDER BY T.TRANSACTIONID
