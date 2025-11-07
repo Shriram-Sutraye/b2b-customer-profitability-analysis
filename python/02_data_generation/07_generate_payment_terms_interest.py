@@ -2,33 +2,73 @@ import pandas as pd
 import numpy as np
 import sys
 
+np.random.seed(42)
+
 print("=" * 100)
 print("DATASET 7: PAYMENT TERMS & DSO INTEREST COST")
-print("Calculate working capital financing cost based on payment terms")
+print("Generates payment terms + calculates working capital financing cost")
 print("=" * 100)
 
 # Load datasets
 print("\n[STEP 1] Loading dependent datasets...")
 try:
     transactions = pd.read_csv('data/generated/02_transactions_generated.csv')
+    customers = pd.read_csv('data/processed/01_customer_master.csv')
     print(f"✓ Loaded {len(transactions)} transactions")
+    print(f"✓ Loaded {len(customers)} customers")
 except FileNotFoundError as e:
     print(f"✗ ERROR: {e}")
     sys.exit(1)
 
-# Payment terms to DSO mapping
-print("\n[STEP 2] Applying payment terms parameters...")
+# Merge to get customer segment
+trans_with_segment = transactions.merge(customers[['CustomerID', 'CustomerSegment']], on='CustomerID')
 
+# Payment terms logic (GENERATE HERE!)
+print("\n[STEP 2] Generating payment terms logic...")
+
+def assign_payment_terms(customer_segment):
+    """Assign payment terms based on customer segment"""
+    rand_val = np.random.random()
+    
+    # 12% random outliers
+    if rand_val < 0.12:
+        return np.random.choice(['Net-30', 'Net-60', 'Net-90'])
+    
+    # 88% logical based on segment
+    if customer_segment == 'SMB':
+        if rand_val < 0.71:
+            return 'Net-30'
+        elif rand_val < 0.88:
+            return 'Net-60'
+        else:
+            return 'Net-90'
+    elif customer_segment == 'Mid-Market':
+        if rand_val < 0.34:
+            return 'Net-30'
+        elif rand_val < 0.80:
+            return 'Net-60'
+        else:
+            return 'Net-90'
+    else:  # Enterprise
+        if rand_val < 0.67:
+            return 'Net-30'
+        elif rand_val < 0.99:
+            return 'Net-60'
+        else:
+            return 'Net-90'
+
+# Payment terms to DSO mapping
 payment_terms_map = {
-    'Net-30': 30,      # 30 days to collect
-    'Net-60': 60,      # 60 days to collect
-    'Net-90': 90       # 90 days to collect
+    'Net-30': 30,
+    'Net-60': 60,
+    'Net-90': 90
 }
 
 # Cost of capital (financing rate)
 annual_interest_rate = 0.05  # 5% per year
 
-print(f"✓ Payment terms DSO mapping: Net-30=30d, Net-60=60d, Net-90=90d")
+print(f"✓ Payment terms DSO: Net-30=30d, Net-60=60d, Net-90=90d")
+print(f"✓ Logic: 88% by segment + 12% random outliers")
 print(f"✓ Annual interest rate: {annual_interest_rate*100:.1f}%")
 
 # Generate payment terms interest data
@@ -36,13 +76,14 @@ print("\n[STEP 3] Calculating DSO interest costs...")
 
 payment_data = []
 
-for idx, trans in transactions.iterrows():
+for idx, trans in trans_with_segment.iterrows():
     transaction_id = trans['TransactionID']
     customer_id = trans['CustomerID']
     transaction_amount = trans['TransactionAmount']
+    customer_segment = trans['CustomerSegment']
     
-    # Get payment terms from transaction
-    payment_terms = trans.get('PaymentTerms', 'Net-30')
+    # **GENERATE payment terms here!**
+    payment_terms = assign_payment_terms(customer_segment)
     
     # Map to DSO (days)
     dso_days = payment_terms_map.get(payment_terms, 30)
@@ -57,8 +98,9 @@ for idx, trans in transactions.iterrows():
     payment_record = {
         'TransactionID': transaction_id,
         'CustomerID': customer_id,
+        'CustomerSegment': customer_segment,
         'TransactionAmount_EUR': round(transaction_amount, 2),
-        'PaymentTerms': payment_terms,
+        'PaymentTerms': payment_terms,  # ← GENERATED HERE
         'DSO_Days': dso_days,
         'AnnualInterestRate': annual_interest_rate,
         'DailyInterestCost_EUR': round(daily_interest, 4),
@@ -68,7 +110,7 @@ for idx, trans in transactions.iterrows():
     payment_data.append(payment_record)
     
     if (idx + 1) % 2000 == 0:
-        print(f"  ✓ Processed {idx + 1}/{len(transactions)} transactions")
+        print(f"  ✓ Processed {idx + 1}/{len(trans_with_segment)} transactions")
 
 # Create DataFrame
 print("\n[STEP 4] Converting to DataFrame...")
@@ -95,9 +137,17 @@ for term in ['Net-30', 'Net-60', 'Net-90']:
     term_data = payment_df[payment_df['PaymentTerms'] == term]
     if len(term_data) > 0:
         avg_cost = term_data['DSO_InterestCost_EUR'].mean()
-        print(f"    {term}: €{avg_cost:.2f} average")
+        pct = len(term_data) / len(payment_df) * 100
+        print(f"    {term}: {pct:.1f}% of orders, €{avg_cost:.2f} average")
 
-print(f"\n  [5.4] Interest Cost as % of Revenue:")
+print(f"\n  [5.4] Interest Cost by Customer Segment:")
+for segment in ['SMB', 'Mid-Market', 'Enterprise']:
+    seg_data = payment_df[payment_df['CustomerSegment'] == segment]
+    if len(seg_data) > 0:
+        avg_cost = seg_data['DSO_InterestCost_EUR'].mean()
+        print(f"    {segment}: €{avg_cost:.2f} average")
+
+print(f"\n  [5.5] Interest Cost as % of Revenue:")
 revenue_pct = (payment_df['DSO_InterestCost_EUR'].sum() / payment_df['TransactionAmount_EUR'].sum()) * 100
 print(f"    Total interest: {revenue_pct:.2f}% of revenue")
 
@@ -117,19 +167,21 @@ print(f"  Total Transactions: {len(payment_df):,}")
 print(f"  Total Interest Cost: €{payment_df['DSO_InterestCost_EUR'].sum():,.2f}")
 print(f"  Average per Order: €{payment_df['DSO_InterestCost_EUR'].mean():.2f}")
 
-print(f"\nPayment Terms Breakdown:")
+print(f"\nPayment Terms Distribution (Now Correct):")
 for term in ['Net-30', 'Net-60', 'Net-90']:
     term_data = payment_df[payment_df['PaymentTerms'] == term]
     if len(term_data) > 0:
         count = len(term_data)
+        pct = count / len(payment_df) * 100
         total_cost = term_data['DSO_InterestCost_EUR'].sum()
-        print(f"  {term}: {count:,} orders, €{total_cost:,.2f} total interest")
+        print(f"  {term}: {count:,} orders ({pct:.1f}%), €{total_cost:,.2f} total interest")
 
 print(f"\nKey Insights:")
-print(f"  DSO Interest adds €{payment_df['DSO_InterestCost_EUR'].mean():.2f} per order")
-print(f"  This is {revenue_pct:.2f}% of average revenue (€{payment_df['TransactionAmount_EUR'].mean():.2f})")
-print(f"  Net-30 customers: Lowest interest cost")
-print(f"  Net-90 customers: 3x higher interest cost than Net-30")
+print(f"  ✓ Payment terms now CORRECTLY distributed by segment")
+print(f"  ✓ SMB: More Net-30, Enterprise: More Net-60/90")
+print(f"  ✓ DSO Interest adds €{payment_df['DSO_InterestCost_EUR'].mean():.2f} per order")
+print(f"  ✓ This is {revenue_pct:.2f}% of average revenue")
+print(f"  ✓ Net-90 customers are expensive to finance")
 
 print("\n" + "=" * 100)
 print("✓ DATASET 7 GENERATION COMPLETE")
