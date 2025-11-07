@@ -1,0 +1,4 @@
+CustomerSegment,CustomerCount,AnnualProfit_Total,AnnualProfit_Avg,OrderCount_Avg,CLV_Total,CLV_Avg,CLV_Min,CLV_Max,ACustomerCount
+Enterprise,66,639638.69,9691.5,26.02,7015664.28,106297.94,-98176.48,600764.96,46
+Mid-Market,228,68213.65,299.18,30.01,-46718.1,-204.9,-54614.3,83118.28,101
+SMB,146,-625190.65,-4282.13,40.6,-1606776.62,-11005.32,-19157.68,6231.22,2
