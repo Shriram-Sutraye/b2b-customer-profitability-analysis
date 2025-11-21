@@ -48,17 +48,12 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 
 ![Customer Profitability Segmentation](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-18.png)
 
-| **Calculation Logic** | **Formula / Methodology** |
-| :--- | :--- |
-| **Customer Lifetime Value (CLV)** | $(Annual Profit \times Expected Tenure) - Acquisition Cost$ |
-| **Segmentation Thresholds** | **A-Tier:** CLV > €5k (High Profit) <br> **C-Tier:** CLV < €0 (Unprofitable) |
-
-**5 Key Insights from Dashboard:**
-1.  🔴 **Massive Loss Cohort:** The dominance of the **Red Bar** confirms that **65% of customers (C-Tier)** are actively destroying value.
-2.  🟢 **Profit Concentration:** The **Green Bar (A-Tier)** represents the minority (34%) that is effectively subsidizing the entire business.
-3.  📉 **Polarized Base:** The distinct lack of a "Middle Class" (B-Tier is negligible) suggests customers are either excellent or terrible, with no middle ground.
-4.  ⚠️ **Revenue Trap:** Despite having 440 customers, the "customer count" metric is a vanity metric masking deep unprofitability.
-5.  💸 **Subsidy Risk:** The business model is fragile; if A-Tier customers leave, the C-Tier losses will bankrupt the company immediately.
+**5 Key Business Insights:**
+1.  **Structural Unprofitability:** A staggering 65% of the active customer base (C-Tier) is currently unprofitable, actively eroding margins on every transaction they make.
+2.  **Profit Concentration:** A minority of 34% of customers (A-Tier) generates over 100% of the company's net income, effectively subsidizing the heavy losses from the rest of the portfolio.
+3.  **Binary Performance:** The customer base is deeply polarized; accounts are either highly profitable or significantly value-destructive, with almost no stable "middle class" performers to anchor the business.
+4.  **Volume vs. Value:** While customer acquisition targets have been met with 440 accounts, the focus on volume over margin quality has created a "hollow" revenue stream.
+5.  **Existential Risk:** The company is perilously dependent on the retention of top-tier accounts; losing even a small fraction of A-Tier customers would result in immediate insolvency due to the weight of the C-Tier losses.
 
 ---
 
@@ -67,17 +62,12 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 
 ![Strategic Scenario Modeling](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-38.png)
 
-| **Calculation Logic** | **Formula / Methodology** |
-| :--- | :--- |
-| **Scenario Projection** | $Profit_{New} = (Rev \times (1+\Delta Price)) - (Cost \times (1+\Delta Volume))$ |
-| **Renegotiation Assumptions** | Price +20%, Volume -10% (Churn), Payment Terms Net-30 |
-
-**5 Key Insights from Dashboard:**
-1.  🚀 **The Winner:** The **"Renegotiate C-Tier"** bar is the tallest, projecting a clear path to **~€2.5M Net Profit**.
-2.  💀 **Status Quo is Dead:** The "Status Quo" bar (far left) is barely visible (~€80k), visually proving that doing nothing is not an option.
-3.  🛡️ **Safety Net:** The "Exit C-Tier" bar (~€1.6M) shows that even simply firing bad customers is 20x better than the current state.
-4.  💰 **Cost of Inaction:** The vertical gap between the "Status Quo" bar and the "Renegotiate" bar represents **€2.4M in lost opportunity** every year.
-5.  ⚖️ **Strategy Validation:** The upward trend from left to right confirms that aggressive intervention yields progressively higher returns.
+**5 Key Business Insights:**
+1.  **Renegotiation Upside:** Strategic renegotiation of C-Tier contracts (adjusting price and terms) offers the highest return, projecting a potential net profit increase to ~€2.5M.
+2.  **Unsustainable Baseline:** The current operational model yields a negligible €80k profit on €14.6M revenue, leaving zero financial room for error or investment.
+3.  **Viability of Exit:** Simply terminating relationships with unprofitable customers would instantly raise profitability to ~€1.6M, proving that revenue shrinkage is preferable to current losses.
+4.  **Cost of Inaction:** Delaying strategic intervention costs the business approximately €200k in potential profit realization every single month.
+5.  **Strategic Hierarchy:** Minor adjustments are insufficient; only aggressive interventions—specifically pricing restructuring or relationship termination—provide the necessary financial turnaround.
 
 ---
 
@@ -86,17 +76,12 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 
 ![Operational Cost Forensics](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-45.png)
 
-| **Calculation Logic** | **Formula / Methodology** |
-| :--- | :--- |
-| **Activity-Based Costing (ABC)** | Costs assigned to specific orders based on **Weight**, **Temperature Class**, and **Handling Time**. |
-| **Net Margin %** | $(Total Revenue - Total All Costs) / Total Revenue$ |
-
-**5 Key Insights from Dashboard:**
-1.  🚨 **Return Rate Alarm:** The Gauge plainly shows **7.80%**, which is nearly **2x the industry benchmark** (3-4%).
-2.  ❄️ **Cold Chain Failure:** The **"Fresh"** category bar is significantly higher than others, pinpointing the specific source of operational bleed.
-3.  📉 **Razor Thin Margins:** The **0.57% Net Margin** card visually confirms the company has zero financial buffer against disruption.
-4.  📦 **Cost Structure:** The stacked charts reveal that **Warehouse** and **Returns** costs are disproportionately high compared to Shipping.
-5.  🎯 **Targeted Fix:** Logistics optimization must focus specifically on the **"Fresh"** supply chain to lower that specific cost peak.
+**5 Key Business Insights:**
+1.  **Return Rate Crisis:** The overall return rate of 7.80% is nearly double the industry average (3-4%), acting as a primary lever for margin erosion.
+2.  **Perishable Logistics:** The "Fresh" product category incurs disproportionate operational costs, indicating specific failures in cold-chain management rather than general logistics inefficiencies.
+3.  **Zero Resilience:** A net margin of 0.57% means the business is currently operating without a financial safety net against supply chain disruptions or cost fluctuations.
+4.  **Cost Allocation:** Internal handling costs (Warehouse and Returns) significantly outweigh outbound shipping expenses, suggesting the primary inefficiencies are inside the facility, not on the road.
+5.  **Operational Focus:** Reducing waste in the Fresh category offers the single largest operational lever for cost reduction, independent of commercial renegotiations.
 
 **The Leak:**
 *   **Return Rate:** **7.80%**. This is double the industry standard (3-4%).
