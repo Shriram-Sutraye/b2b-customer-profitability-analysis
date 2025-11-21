@@ -37,7 +37,7 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 
 **Investment vs. Value:**
 *   **Investment:** Zero CAPEX. 3 weeks of analyst time.
-*   **Value Delivered:** A prescriptive roadmap to increase Net Income by **30x** (from €82k to ~€2.5M).
+*   **Value Delivered:** A prescriptive roadmap to increase Net Income by **30x** (from €82k to approximately €2.5M).
 
 ---
 
@@ -63,9 +63,9 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 ![Strategic Scenario Modeling](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-38.png)
 
 **5 Key Business Insights:**
-1.  **Renegotiation Upside:** Strategic renegotiation of C-Tier contracts (adjusting price and terms) offers the highest return, projecting a potential net profit increase to ~€2.5M.
+1.  **Renegotiation Upside:** Strategic renegotiation of C-Tier contracts (adjusting price and terms) offers the highest return, projecting a potential net profit increase to €2.5M.
 2.  **Unsustainable Baseline:** The current operational model yields a negligible €80k profit on €14.6M revenue, leaving zero financial room for error or investment.
-3.  **Viability of Exit:** Simply terminating relationships with unprofitable customers would instantly raise profitability to ~€1.6M, proving that revenue shrinkage is preferable to current losses.
+3.  **Viability of Exit:** Simply terminating relationships with unprofitable customers would instantly raise profitability to €1.6M, proving that revenue shrinkage is preferable to current losses.
 4.  **Cost of Inaction:** Delaying strategic intervention costs the business approximately €200k in potential profit realization every single month.
 5.  **Strategic Hierarchy:** Minor adjustments are insufficient; only aggressive interventions—specifically pricing restructuring or relationship termination—provide the necessary financial turnaround.
 
@@ -128,7 +128,7 @@ Based on the data, I recommend the following immediate actions for the Executive
 2.  **Fix the Fresh Supply Chain (Operational):**
     *   **Action:** Audit the cold chain logistics for Fresh products.
     *   **Target:** Reduce Return Rate from **7.8%** to **4.0%**.
-    *   **Impact:** ~€500k annual savings in waste reduction.
+    *   **Impact:** approximately €500k annual savings in waste reduction.
 
 3.  **Stop Incentivizing Unprofitable Revenue:**
     *   **Action:** Change Sales Commission structure from *Revenue %* to *Gross Margin %*.
