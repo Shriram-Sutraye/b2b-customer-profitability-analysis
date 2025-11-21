@@ -48,6 +48,8 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 ![Power BI](https://img.shields.io/badge/Power_BI-Service-yellow?style=flat-square&logo=powerbi&logoColor=white)
 ![DAX](https://img.shields.io/badge/DAX-Modeling-green?style=flat-square&logo=powerbi&logoColor=white)
 
+[![View Live Dashboard](https://img.shields.io/badge/View_Live_Dashboard-Interact_Now-success?style=for-the-badge&logo=powerbi&logoColor=white)](https://app.powerbi.com/view?r=eyJrIjoiMDM2NWQxM2UtODQwMy00MzA5LWI4YjEtZmMxZGQ5MzZmNjljIiwidCI6ImE3OWVlODNiLThkZGYtNDEyOS1iMjc2LTM2MGQ3ZTg4YTJmMiJ9)
+
 ---
 
 ## 📊 Results & Impact: The Visual Evidence
