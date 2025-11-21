@@ -108,14 +108,6 @@ My methodology followed a Mutually Exclusive, Collectively Exhaustive (MECE) app
 
 ---
 
-## 🔬 Technical Excellence
-
-*   **Reproducible Pipeline:** The entire analysis—from data generation to P&L calculation—runs via a single script sequence.
-*   **Data Quality Checks:** Automated validation scripts (`validate_bq.py`) ensure accounting identities hold true (Revenue - Costs = Profit).
-*   **Version Control:** structured Git workflow with clear commit history and feature branching.
-
----
-
 ## 📣 Recommendations & Next Steps
 
 Based on the validated data, I recommend a three-phased transformation plan to capture the identified profit opportunity.
