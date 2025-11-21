@@ -125,8 +125,8 @@ Based on the validated data, I recommend a three-phased transformation plan to c
 
 *   **Strategic Logic:** These customers generate €7.05M in revenue (48% of total) but consume disproportionate resources. The goal is not to fire them all, but to force them into a profitable operating model.
 *   **Implementation Plan:**
-    *   **Price Indexing:** Implement a price indexing strategy (modeling suggests a target increase of approximately 18%) across the board for this segment to cover the service-cost gap.
-    *   **Minimum Order Quantity (MOQ):** Establish a Minimum Order Quantity (MOQ) threshold (analysis indicates €500 as the breakeven point). Data confirms orders below this threshold consistently yield negative contribution margins due to fixed picking/shipping costs.
+    *   **Price Indexing:** Implement a strategic price indexing strategy across the board for this segment to cover the service-cost gap.
+    *   **Minimum Order Quantity (MOQ):** Establish a Minimum Order Quantity (MOQ) threshold optimized for breakeven contribution. Data confirms orders below this threshold consistently yield negative contribution margins due to fixed picking/shipping costs.
     *   **Payment Terms:** Migrate from Net-90 to **Net-30 or Pre-paid**. This removes the working capital strain and interest expense associated with these high-risk accounts.
 *   **Financial Validation:** Even if 50% of these customers churn (exit), the company could eliminate a significant portion of current operational losses. If the remaining 50% accept the terms, they have the potential to contribute significant new profit.
 
@@ -135,10 +135,10 @@ Based on the validated data, I recommend a three-phased transformation plan to c
 
 *   **Strategic Logic:** The "Fresh" category is the highest revenue driver but also the largest source of operational leakage. The high return rate indicates systemic failures in temperature control or vendor quality, not just customer caprice.
 *   **Implementation Plan:**
-    *   **Inbound QC:** Implement mandatory temperature logging at the receiving dock. Reject any inbound shipments deviating from the 2°C-4°C safety window.
+    *   **Inbound QC:** Implement mandatory temperature logging at the receiving dock. Reject any inbound shipments deviating from strict safety windows.
     *   **Vendor Chargebacks:** Institute a "Cost of Quality" policy where suppliers are billed for returns attributed to spoilage within 24 hours of delivery.
     *   **Packaging Upgrade:** Invest in thermal liners for "Fresh" outbound shipments to reduce transit spoilage.
-*   **Financial Validation:** Reducing the return rate from 7.8% to the industry standard of 4.0% could recover significant value (estimated at €500,000 annually based on current waste rates) in direct logistics costs, restocking labor, and inventory write-offs.
+*   **Financial Validation:** Reducing the return rate from 7.8% to the industry standard of 4.0% could recover significant value based on current waste rates in direct logistics costs, restocking labor, and inventory write-offs.
 
 ### 3. Governance & Incentives: The "Margin-First" Pivot
 **Target:** Sales Team and Account Management.
@@ -147,7 +147,7 @@ Based on the validated data, I recommend a three-phased transformation plan to c
 *   **Implementation Plan:**
     *   **Commission Structure:** Shift immediately from "Revenue %" to "**Contribution Margin %**". Pay zero commission on deals with a projected negative margin.
     *   **Clawback Clause:** Institute a policy where commissions are clawed back if a new customer generates a net loss in their first two quarters.
-    *   **Gatekeeper Protocol:** Require Finance approval for any non-standard payment terms (e.g., Net-60+) for customers projecting under €50k annual spend.
+    *   **Gatekeeper Protocol:** Require Finance approval for any non-standard payment terms (e.g., Net-60+) for customers projecting low annual spend.
 *   **Financial Validation:** Aligning incentives ensures that the €2.5M profit gains from Recommendations 1 and 2 are sustained and not eroded by future bad-faith acquisition.
 
 ---
