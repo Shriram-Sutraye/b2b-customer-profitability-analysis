@@ -46,7 +46,7 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 ### 1. The "65% Problem": Structural Unprofitability
 *Identifying the true source of margin erosion.*
 
-![Customer Profitability Segmentation](../powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-18.png)
+![Customer Profitability Segmentation](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-18.png)
 
 **The Insight:**
 Contrary to the belief that "a few bad apples" were the issue, the dashboard reveals a systemic failure. The **massive red bar** represents the **C-Tier Segment**:
@@ -57,7 +57,7 @@ Contrary to the belief that "a few bad apples" were the issue, the dashboard rev
 ### 2. Strategic Path Forward: €2.5M Upside
 *Quantifying the value of corrective actions.*
 
-![Strategic Scenario Modeling](../powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-38.png)
+![Strategic Scenario Modeling](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-38.png)
 
 **The Strategy:**
 I modeled five scenarios to fix the P&L. The dashboard clearly shows the winner:
@@ -71,7 +71,7 @@ Do not fire the 65%. **Fix them.** By implementing a "Renegotiation Framework" (
 ### 3. Operational Diagnostics: The Cost of Complexity
 *Where the operational dollars are actually going.*
 
-![Operational Cost Forensics](../powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-45.png)
+![Operational Cost Forensics](powerbi/Dashboards/Screenshot%20From%202025-11-20%2022-54-45.png)
 
 **The Leak:**
 *   **Return Rate:** **7.80%**. This is double the industry standard (3-4%).
