@@ -125,10 +125,10 @@ Based on the validated data, I recommend a three-phased transformation plan to c
 
 *   **Strategic Logic:** These customers generate €7.05M in revenue (48% of total) but consume disproportionate resources. The goal is not to fire them all, but to force them into a profitable operating model.
 *   **Implementation Plan:**
-    *   **Price Indexing:** Implement an immediate **18% price increase** across the board for this segment to cover the service-cost gap.
-    *   **Minimum Order Quantity (MOQ):** Enforce a strict **€500 MOQ**. Data confirms orders below this threshold consistently yield negative contribution margins due to fixed picking/shipping costs.
+    *   **Price Indexing:** Implement a price indexing strategy (modeling suggests a target increase of approximately 18%) across the board for this segment to cover the service-cost gap.
+    *   **Minimum Order Quantity (MOQ):** Establish a Minimum Order Quantity (MOQ) threshold (analysis indicates €500 as the breakeven point). Data confirms orders below this threshold consistently yield negative contribution margins due to fixed picking/shipping costs.
     *   **Payment Terms:** Migrate from Net-90 to **Net-30 or Pre-paid**. This removes the working capital strain and interest expense associated with these high-risk accounts.
-*   **Financial Validation:** Even if 50% of these customers churn (exit), the company sheds €625k in operational losses. If the remaining 50% accept the terms, they contribute an estimated €630k in new profit.
+*   **Financial Validation:** Even if 50% of these customers churn (exit), the company could eliminate a significant portion of current operational losses. If the remaining 50% accept the terms, they have the potential to contribute significant new profit.
 
 ### 2. Operational Remediation: "Fresh" Category Cold Chain
 **Target:** The "Fresh" product category, which drives the company-wide 7.80% return rate (2x industry benchmark).
@@ -138,7 +138,7 @@ Based on the validated data, I recommend a three-phased transformation plan to c
     *   **Inbound QC:** Implement mandatory temperature logging at the receiving dock. Reject any inbound shipments deviating from the 2°C-4°C safety window.
     *   **Vendor Chargebacks:** Institute a "Cost of Quality" policy where suppliers are billed for returns attributed to spoilage within 24 hours of delivery.
     *   **Packaging Upgrade:** Invest in thermal liners for "Fresh" outbound shipments to reduce transit spoilage.
-*   **Financial Validation:** Reducing the return rate from 7.8% to the industry standard of 4.0% recovers approximately **€500,000** annually in direct logistics costs, restocking labor, and inventory write-offs.
+*   **Financial Validation:** Reducing the return rate from 7.8% to the industry standard of 4.0% could recover significant value (estimated at €500,000 annually based on current waste rates) in direct logistics costs, restocking labor, and inventory write-offs.
 
 ### 3. Governance & Incentives: The "Margin-First" Pivot
 **Target:** Sales Team and Account Management.
