@@ -41,6 +41,15 @@ With a **0.57% Net Margin**, the business has zero resilience. A minor supplier 
 
 ---
 
+## 🛠 Technologies Used
+
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-Advanced-orange?style=flat-square&logo=postgresql&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power_BI-Service-yellow?style=flat-square&logo=powerbi&logoColor=white)
+![DAX](https://img.shields.io/badge/DAX-Modeling-green?style=flat-square&logo=powerbi&logoColor=white)
+
+---
+
 ## 📊 Results & Impact: The Visual Evidence
 
 ### 1. The "65% Problem": Structural Unprofitability
@@ -141,6 +150,49 @@ Based on the validated data, I recommend a three-phased transformation plan to c
     *   **Clawback Clause:** Institute a policy where commissions are clawed back if a new customer generates a net loss in their first two quarters.
     *   **Gatekeeper Protocol:** Require Finance approval for any non-standard payment terms (e.g., Net-60+) for customers projecting low annual spend.
 *   **Financial Validation:** Aligning incentives ensures that the €2.5M profit gains from Recommendations 1 and 2 are sustained and not eroded by future bad-faith acquisition.
+
+---
+
+## 💻 Strategic Code Highlights
+
+*Key SQL logic used to transform raw transaction data into strategic segments.*
+
+**1. Customer Lifetime Value (CLV) Segmentation Logic**
+```sql
+-- Calculating CLV and assigning Strategic Tiers (A/B/C)
+CASE 
+    -- A-Customer: CLV > €5,000 (High Value, High Retention)
+    WHEN (SUM(PROFIT_EUR) * EXPECTED_TENURE_YEARS) - CAC > 5000 THEN 'A-Customer'
+    
+    -- B-Customer: Positive CLV (Profitable but lower scale)
+    WHEN (SUM(PROFIT_EUR) * EXPECTED_TENURE_YEARS) - CAC > 0 THEN 'B-Customer'
+    
+    -- C-Customer: Negative CLV (Value Destroyers)
+    ELSE 'C-Customer'
+END AS CLV_SEGMENT
+```
+
+**2. Activity-Based Warehouse Cost Allocation**
+```sql
+-- Assigning warehouse costs based on order complexity and handling requirements
+SELECT 
+    TRANSACTION_ID,
+    -- Base pick/pack cost per item
+    (QUANTITY * 6.50) AS PICK_PACK_COST,
+    
+    -- Cold Chain Surcharge (1.5x multiplier for perishables)
+    CASE 
+        WHEN CATEGORY IN ('Fresh', 'Milk', 'Deli') THEN 1.50 
+        ELSE 1.00 
+    END AS COLD_CHAIN_MULTIPLIER,
+    
+    -- Rush Order Surcharge (+50% for expedited processing)
+    CASE 
+        WHEN IS_URGENT = TRUE THEN (TRANSACTION_AMOUNT * 0.02) 
+        ELSE 0 
+    END AS RUSH_SURCHARGE
+FROM TRANSACTIONS
+```
 
 ---
 
