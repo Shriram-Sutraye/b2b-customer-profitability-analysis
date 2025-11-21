@@ -2,6 +2,7 @@
 -- Hybrid approach: Base + Segment Multiplier + Product Adjustment
 -- Matches Python logic exactly
 
+CREATE OR REPLACE TABLE B2B_PROFITABILITY.PUBLIC."09_ADMIN_OVERHEAD_GENERATED" AS
 SELECT 
     T.TRANSACTIONID,
     T.CUSTOMERID,

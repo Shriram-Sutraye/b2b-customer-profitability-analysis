@@ -13,7 +13,7 @@ TXN-2023-000011,CUST-001,Mid-Market,Fresh,9,Net-60,True,False,560.89,336.53,212.
 TXN-2023-000012,CUST-001,Mid-Market,Milk,10,Net-90,True,False,2567.79,1540.67,421.39,0.0,0.0,31.66,94.59,2088.31,479.48,18.67,81.33,Highly Profitable,False,False,False
 TXN-2023-000013,CUST-001,Mid-Market,Fresh,10,Net-30,False,False,3951.71,2371.03,1991.34,353.38,0.0,16.24,99.59,4831.58,-879.87,-22.27,122.27,Loss,True,True,True
 TXN-2023-000014,CUST-001,Mid-Market,Milk,11,Net-60,True,False,1696.28,1017.77,321.44,0.0,0.0,13.94,94.59,1447.74,248.54,14.65,85.35,Highly Profitable,False,False,False
-TXN-2023-000015,CUST-001,Mid-Market,Milk,11,Net-60,True,False,2039.2,1223.52,370.41,0.0,0.0,16.76,94.59,1705.28,333.92,16.38,83.62,Highly Profitable,False,False,False
+TXN-2023-000015,CUST-001,Mid-Market,Milk,11,Net-60,True,False,2039.2,1223.52,370.41,0.0,0.0,16.76,94.59,1705.28,333.92,16.38,83.62,Highly Profitable,False,False,False  
 TXN-2023-000016,CUST-001,Mid-Market,Frozen,12,Net-30,True,False,1866.38,1119.83,212.9,0.0,0.0,7.67,89.59,1429.99,436.39,23.38,76.62,Highly Profitable,False,False,False
 TXN-2023-000017,CUST-002,Mid-Market,Milk,1,Net-30,True,False,2099.6,1259.76,331.17,0.0,0.0,8.63,94.59,1694.15,405.45,19.31,80.69,Highly Profitable,False,False,False
 TXN-2023-000018,CUST-002,Mid-Market,Milk,2,Net-60,True,False,3629.81,2177.89,596.02,0.0,0.0,29.83,94.59,2898.33,731.48,20.15,79.85,Highly Profitable,False,False,False

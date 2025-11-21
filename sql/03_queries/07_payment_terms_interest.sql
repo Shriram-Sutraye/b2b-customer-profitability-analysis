@@ -2,6 +2,7 @@
 -- Generates payment terms based on customer segment
 -- Logic: 12% random outliers + 88% segment-based distribution
 -- SMB: 71% Net-30, 17% Net-60, 12% Net-90
+CREATE OR REPLACE TABLE B2B_PROFITABILITY.PUBLIC."07_PAYMENT_TERMS_GENERATED" AS
 -- Mid-Market: 34% Net-30, 46% Net-60, 20% Net-90
 -- Enterprise: 67% Net-30, 32% Net-60, 1% Net-90
 -- Calculates DSO interest cost (5% annual rate)

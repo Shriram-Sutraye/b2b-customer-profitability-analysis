@@ -2,6 +2,7 @@
 -- Calculate warehouse costs per transaction
 -- Logic: Based on order characteristics (urgency, size, product category)
 
+CREATE OR REPLACE TABLE B2B_PROFITABILITY.PUBLIC."04_WAREHOUSE_COSTS_GENERATED" AS
 SELECT 
     T.TRANSACTIONID,
     T.CUSTOMERID,
