@@ -214,3 +214,37 @@ This document provides a detailed reference for the datasets generated in the **
 | `Margin_Pct` | Float | Projected Net Margin | |
 | `Risk_Level` | String | Risk Assessment | LOW, MEDIUM, HIGH, EXTREME |
 | `Recommendation` | String | Final Verdict | OPTIMAL, SAFE, RISKY, UNSUSTAINABLE |
+
+---
+
+## 15. Derived / Reporting Datasets
+**Source:** `python/05_data_viz/data_validation.py`
+**Description:** Aggregated summary files generated for dashboard validation and quick reporting. These are derived entirely from the primary datasets above.
+
+### A. KPI Summary (`kpi_summary.csv`)
+**Purpose:** High-level executive metrics for dashboard cards.
+
+| Column Name | Data Type | Description |
+| :--- | :--- | :--- |
+| `Metric` | String | Name of the KPI (e.g., "Total CLV", "Net Margin %") |
+| `Value` | Float | Calculated value |
+
+### B. Segment Summary (`segment_summary.csv`)
+**Purpose:** Aggregated performance metrics by CLV Segment.
+
+| Column Name | Data Type | Description |
+| :--- | :--- | :--- |
+| `CLVSegment` | String | Segment Name (A-Customer, B-Customer, C-Customer) |
+| `CustomerCount` | Integer | Number of customers in segment |
+| `CLV_EUR` | Float | Total Lifetime Value of segment |
+| `AnnualProfit_EUR` | Float | Total Annual Profit of segment |
+
+### C. Monthly Trends (`monthly_trends.csv`)
+**Purpose:** Time-series data for trend analysis charts.
+
+| Column Name | Data Type | Description |
+| :--- | :--- | :--- |
+| `OrderMonth` | Date | Month of aggregation |
+| `TransactionAmount` | Float | Total Revenue for the month |
+| `Profit_EUR` | Float | Total Net Profit for the month |
+| `OrderCount` | Integer | Number of orders processed |
