@@ -144,6 +144,27 @@ Based on the validated data, I recommend a three-phased transformation plan to c
 
 ---
 
+<details>
+<summary><strong>🛠️ Technical Appendix: Architecture & Methodology</strong></summary>
+
+While the focus of this project is strategic, the results are powered by a rigorous technical pipeline designed for accuracy and scalability.
+
+**1. Synthetic Data Engine (Python)**
+*   **Libraries:** `pandas`, `numpy`, `faker`
+*   **Logic:** Generated 14,489 transactions across 440 customers using probabilistic distributions (log-normal for order value, poisson for frequency) to simulate realistic B2B buying behaviors, seasonality, and perishability risks.
+
+**2. Activity-Based Costing (SQL)**
+*   **Logic:** Moved beyond simple Gross Margin by implementing a granular SQL transformation layer.
+*   **Allocation:** Assigned specific operational costs (Pick/Pack, Storage, Cold Chain Surcharges) to individual transactions based on weight, temperature class, and handling complexity.
+
+**3. Strategic Modeling**
+*   **Scenario Engine:** Developed a deterministic model to simulate P&L outcomes under 5 distinct strategic interventions (e.g., "Price +18%").
+*   **Validation:** All scenarios were cross-validated against accounting identities (Revenue - Cost = Profit) to ensure financial integrity.
+
+</details>
+
+---
+
 ## 🤝 Contact & Collaboration
 
 **Ready to transform your data into profit?**
